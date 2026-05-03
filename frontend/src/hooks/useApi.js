@@ -3,7 +3,7 @@ import {
   MOCK_LEADERBOARD, MOCK_MP, MOCK_MP_VOTES, MOCK_QUESTIONS
 } from '../mockData.js'
 
-const USE_MOCK = true   // flip to false when backend is running
+const USE_MOCK = false   // flip to false when backend is running
 
 async function apiFetch(path) {
   const res = await fetch(`/api${path}`)
