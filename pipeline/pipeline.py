@@ -207,17 +207,20 @@ def choice(raw):
 # ── Sync steps ───────────────────────────────────────────────────────────────
 
 def sync_mps(conn):
-    print("\n[1/4] MPs (HenkiloEdustaja)...")
-    rows = fetch_table("HenkiloEdustaja")
-    data = []
+    print("\n[1/4] MPs (from SaliDBAanestysEdustaja)...")
+    rows = fetch_table("SaliDBAanestysEdustaja", max_pages=50)
+    seen = {}
     for r in rows:
-        mid  = r.get("HenkiloId") or r.get("Id","")
-        name = f"{r.get('SukuNimi','')} {r.get('EtuNimi','')}".strip()
-        data.append((str(mid), name, r.get("EduskuntaRyhmaLyhenne",""), r.get("Vaalipiiri",""), r.get("KuvaUrl","")))
-    sql = "INSERT INTO mp (id,name,party,constituency,photo_url) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name,party=EXCLUDED.party,constituency=EXCLUDED.constituency"
+        mid = str(r.get("EdustajaId",""))
+        if mid and mid not in seen:
+            name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
+            seen[mid] = (mid, name, r.get("EdustajaRyhmaLyhenne","").strip(), "", "")
+    data = list(seen.values())
+    sql = "INSERT INTO mp (id,name,party,constituency,photo_url) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name,party=EXCLUDED.party"
     executemany(conn, sql, data)
     execute(conn, "INSERT INTO sync_log VALUES (?,?,?)", ("mp", datetime.utcnow().isoformat(), len(data)))
-    conn.commit(); print(f"  ✓ {len(data)} MPs saved")
+    conn.commit()
+    print(f"  ✓ {len(data)} MPs saved")
 
 
 def sync_sessions(conn):
