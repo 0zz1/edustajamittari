@@ -256,7 +256,7 @@ def sync_mp_votes(conn, update_only=False):
         rows = fetch_table("SaliDBAanestysEdustaja", filters={"AanestysId": vid})
         data = []
         for r in rows:
-mid = str(r.get("EdustajaHenkiloNumero",""))
+            mid = str(r.get("EdustajaHenkiloNumero",""))
             c = choice(r.get("EdustajaAanestys") or r.get("Aanestys") or r.get("Tulos",""))
             if mid and c: data.append((mid, vid, c))
         if data:
