@@ -261,7 +261,7 @@ def sync_mp_votes(conn, update_only=False):
         data = []
         for r in rows:
             mid = str(r.get("HenkiloId") or r.get("EdustajaId",""))
-            c   = choice(r.get("Aanestys") or r.get("Tulos",""))
+            c = choice(r.get("EdustajaAanestys") or r.get("Aanestys") or r.get("Tulos",""))
             if mid and c: data.append((mid, vid, c))
         if data:
             executemany(conn, "INSERT INTO mp_vote (mp_id,vote_id,choice) VALUES (?,?,?) ON CONFLICT(mp_id,vote_id) DO NOTHING", data)
