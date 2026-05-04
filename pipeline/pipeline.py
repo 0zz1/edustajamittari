@@ -208,10 +208,10 @@ def choice(raw):
 
 def sync_mps(conn):
     print("\n[1/4] MPs (from SaliDBAanestysEdustaja)...")
-    rows = fetch_table("SaliDBAanestysEdustaja", max_pages=50)
+    rows = fetch_table("SaliDBAanestysEdustaja", max_pages=3)
     seen = {}
     for r in rows:
-        mid = str(r.get("EdustajaId",""))
+mid = str(r.get("EdustajaHenkiloNumero",""))
         if mid and mid not in seen:
             name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
             seen[mid] = (mid, name, r.get("EdustajaRyhmaLyhenne","").strip(), "", "")
@@ -260,7 +260,7 @@ def sync_mp_votes(conn, update_only=False):
         rows = fetch_table("SaliDBAanestysEdustaja", filters={"AanestysId": vid})
         data = []
         for r in rows:
-            mid = str(r.get("HenkiloId") or r.get("EdustajaId",""))
+mid = str(r.get("EdustajaHenkiloNumero",""))
             c = choice(r.get("EdustajaAanestys") or r.get("Aanestys") or r.get("Tulos",""))
             if mid and c: data.append((mid, vid, c))
         if data:
