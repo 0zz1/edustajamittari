@@ -202,16 +202,12 @@ def choice(raw):
     if r in ("tyhjää","tyhja","tyhjä","blank"): return "tyhja"
     if r in ("poissa","absent"):               return "poissa"
     return ""
-
-
-# ── Sync steps ───────────────────────────────────────────────────────────────
-
 def sync_mps(conn):
     print("\n[1/4] MPs (from SaliDBAanestysEdustaja)...")
     rows = fetch_table("SaliDBAanestysEdustaja", max_pages=3)
     seen = {}
- for r in rows:
-    mid = str(r.get("EdustajaHenkiloNumero",""))
+    for r in rows:
+        mid = str(r.get("EdustajaHenkiloNumero",""))
         if mid and mid not in seen:
             name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
             seen[mid] = (mid, name, r.get("EdustajaRyhmaLyhenne","").strip(), "", "")
