@@ -292,6 +292,23 @@ def print_stats(conn):
     except Exception as e:
         print(f"  (views not built yet: {e})")
 
+def build_attendance(conn):
+    print("\n[*] Building attendance from vote data...")
+    execute(conn, """
+        INSERT INTO attendance (mp_id, session_id, present)
+        SELECT 
+            mv.mp_id,
+            v.session_id,
+            MAX(CASE WHEN mv.choice != 'poissa' THEN 1 ELSE 0 END) as present
+        FROM mp_vote mv
+        JOIN vote v ON v.id = mv.vote_id
+        WHERE v.date >= '2023-07-01'
+        GROUP BY mv.mp_id, v.session_id
+        ON CONFLICT (mp_id, session_id) DO NOTHING
+    """)
+    conn.commit()
+    count = fetchone(conn, "SELECT COUNT(*) as n FROM attendance")["n"]
+    print(f"  ✓ {count} attendance records built")
 
 def main():
     parser = argparse.ArgumentParser(description="Edustajamittari pipeline")
@@ -315,25 +332,7 @@ def main():
         else:
             print("\n[4/4] Skipped (--skip-mp-votes)")
         build_views(conn)
-        def build_attendance(conn):
-    print("\n[*] Building attendance from vote data...")
-    # A session = unique date in vote table
-    # MP is present if they voted jaa/ei/tyhja at least once that day
-    execute(conn, """
-        INSERT INTO attendance (mp_id, session_id, present)
-        SELECT 
-            mv.mp_id,
-            v.session_id,
-            MAX(CASE WHEN mv.choice != 'poissa' THEN 1 ELSE 0 END) as present
-        FROM mp_vote mv
-        JOIN vote v ON v.id = mv.vote_id
-        WHERE v.date >= '2023-07-01'
-        GROUP BY mv.mp_id, v.session_id
-        ON CONFLICT (mp_id, session_id) DO NOTHING
-    """)
-    conn.commit()
-    count = fetchone(conn, "SELECT COUNT(*) as n FROM attendance")["n"]
-    print(f"  ✓ {count} attendance records built")
+        build_attendance(conn)
         print_stats(conn)
 
     print("\n✓ Done.")
