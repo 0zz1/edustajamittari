@@ -117,7 +117,7 @@ useEffect(() => {
             </div>
 
             {data.map((mp, i) => (
-              <Link to={`/mp/${mp.id}`} key={mp.id} style={{
+              <div key={mp.id} style={{
                 display:'grid', gridTemplateColumns:'40px 1fr 90px 90px 90px',
                 alignItems:'center', padding:'10px 16px',
                 borderBottom: i < data.length - 1 ? '1px solid var(--border)' : 'none',
@@ -170,7 +170,7 @@ useEffect(() => {
                 <div style={{ textAlign:'right', fontSize:'0.875rem', color: mp.abstain_pct > 8 ? 'var(--danger)' : 'var(--ink-2)' }}>
                   {mp.abstain_pct != null ? parseFloat(mp.abstain_pct).toFixed(1) : '—'}%
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         )}

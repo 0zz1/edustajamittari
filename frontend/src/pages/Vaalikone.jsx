@@ -295,19 +295,6 @@ export default function Vaalikone() {
               Tämä vertaa sinua siihen, miten he ovat <em>oikeasti äänestäneet</em> eduskunnassa.
             </p>
 
-            <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr 1fr', gap:8, marginBottom:'2rem' }}>
-              {[
-                { n:'8', l:'Oikeaa äänestystä' },
-                { n:'200', l:'Edustajaa' },
-                { n:'~3 min', l:'Aikaa' },
-              ].map(s => (
-                <div key={s.l} style={{ background:'var(--bg-muted)', borderRadius:'var(--radius-md)', padding:'14px 12px', textAlign:'center' }}>
-                  <div style={{ fontFamily:'var(--font-head)', fontWeight:800, fontSize:'1.5rem', letterSpacing:'-0.02em', marginBottom:4 }}>{s.n}</div>
-                  <div className="label" style={{ fontSize:'0.625rem' }}>{s.l}</div>
-                </div>
-              ))}
-            </div>
-
             <div style={{ display:'flex', flexDirection:'column', gap:10, marginBottom:'2rem' }}>
               {[
                 'Kerro kantasi todellisiin eduskuntaäänestyksiin',
@@ -326,10 +313,10 @@ export default function Vaalikone() {
               ))}
             </div>
 
-            <button className="btn btn-primary" style={{ width:'100%', padding:'13px', fontSize:'1rem', borderRadius:'var(--radius-md)' }}
-              onClick={() => setScreen('quiz')}>
-              Aloita →
-            </button>
+           <button className="btn" style={{ width:'100%', padding:'13px', fontSize:'1rem', borderRadius:'var(--radius-md)', opacity:0.5, cursor:'not-allowed' }}
+            disabled>
+            Tulossa myöhemmin
+          </button>
           </div>
         )}
 
