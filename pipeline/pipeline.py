@@ -256,7 +256,7 @@ def sync_votes(conn, update_only=False):
     executemany(conn, "INSERT INTO vote (id,session_id,date,title,description,topic,result,yeas,nays) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO NOTHING", data)
     execute(conn, "INSERT INTO sync_log VALUES (?,?,?)", ("vote", datetime.utcnow().isoformat(), len(data)))
     conn.commit()
-    print(f"  ✓ {len(data)} votes saved")sync_mps
+    print(f"  ✓ {len(data)} votes saved")
 
 
 def sync_mp_votes(conn, update_only=False):
