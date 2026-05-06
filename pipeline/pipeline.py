@@ -307,7 +307,7 @@ def build_attendance(conn):
         ON CONFLICT (mp_id, session_id) DO NOTHING
     """)
     conn.commit()
-    count = fetchone(conn, "SELECT COUNT(*) as n FROM attendance")["n"]
+    count = fetchall(conn, "SELECT COUNT(*) as n FROM attendance")[0]["n"]
     print(f"  ✓ {count} attendance records built")
 
 def main():
