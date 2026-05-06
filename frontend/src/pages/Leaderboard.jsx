@@ -145,9 +145,9 @@ export default function Leaderboard() {
                     <AttendanceBar pct={mp.attendance_pct} height={4} />
                     <span style={{
                       fontSize:'0.875rem', fontWeight:500, minWidth:38, textAlign:'right',
-                      color: mp.attendance_pct >= 90 ? 'var(--accent)' : mp.attendance_pct >= 75 ? 'var(--warn)' : 'var(--danger)',
-                    }}>
-                      {mp.attendance_pct.toFixed(1)}%
+                 color: mp.attendance_pct == null ? 'var(--ink-3)' : mp.attendance_pct >= 90 ? 'var(--accent)' : mp.attendance_pct >= 75 ? 'var(--warn)' : 'var(--danger)',
+                  }}>
+                    {mp.attendance_pct?.toFixed(1) ?? '—'}%
                     </span>
                   </div>
                 </div>
