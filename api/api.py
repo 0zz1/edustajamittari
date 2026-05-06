@@ -79,7 +79,7 @@ def leaderboard():
                 COUNT(*) AS total_votes
             FROM mp_vote mv
             JOIN vote vt ON vt.id = mv.vote_id
-            WHERE vt.date >= '2023-04-01'
+            WHERE vt.date >= '2023-07-01'
             GROUP BY mp_id
         ) v ON v.mp_id = m.id
         {where}
