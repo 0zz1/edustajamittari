@@ -71,6 +71,9 @@ export function MPAvatar({ name, party, size = 36 }) {
 // ── Attendance bar ───────────────────────────────────────────────────────────
 
 export function AttendanceBar({ pct, height = 6 }) {
+  if (pct == null) return (
+    <div style={{ background:'var(--bg-muted)', borderRadius:3, height, flex:1 }} />
+  )
   const color = pct >= 90 ? 'var(--accent)' : pct >= 75 ? 'var(--warn)' : 'var(--danger)'
   return (
     <div style={{ background:'var(--bg-muted)', borderRadius:3, height, flex:1, overflow:'hidden' }}>
