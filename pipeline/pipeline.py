@@ -202,16 +202,18 @@ def choice(raw):
     if r in ("tyhjää","tyhja","tyhjä","blank"): return "tyhja"
     if r in ("poissa","absent"):               return "poissa"
     return ""
+    
 def sync_mps(conn):
-    print("\n[1/4] MPs (from recent vote)...")
-    # Use a recent vote ID to get only current term MPs
-    rows = fetch_table("SaliDBAanestysEdustaja", filters={"AanestysId": "56296"})
+    print("\n[1/4] MPs (from recent votes)...")
     seen = {}
-    for r in rows:
-        mid = str(r.get("EdustajaHenkiloNumero",""))
-        if mid and mid not in seen:
-            name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
-            seen[mid] = (mid, name, r.get("EdustajaRyhmaLyhenne","").strip(), "", "")
+    # Use several recent vote IDs to capture all current term MPs
+    for vote_id in ["56296", "56276", "56211", "56201", "56150"]:
+        rows = fetch_table("SaliDBAanestysEdustaja", filters={"AanestysId": vote_id})
+        for r in rows:
+            mid = str(r.get("EdustajaHenkiloNumero",""))
+            if mid and mid not in seen:
+                name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
+                seen[mid] = (mid, name, r.get("EdustajaRyhmaLyhenne","").strip(), "", "")
     data = list(seen.values())
     sql = "INSERT INTO mp (id,name,party,constituency,photo_url) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name,party=EXCLUDED.party"
     executemany(conn, sql, data)
