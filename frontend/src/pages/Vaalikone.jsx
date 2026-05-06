@@ -278,8 +278,6 @@ export default function Vaalikone() {
     setScreen('intro')
   }
 
-  if (loading) return <div className="page"><div className="container"><Loading /></div></div>
-
   return (
     <div className="page">
       <div className="container">
