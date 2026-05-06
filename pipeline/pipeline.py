@@ -232,17 +232,30 @@ def sync_votes(conn, update_only=False):
     print("\n[3/4] Votes (SaliDBAanestys)...")
     existing = {r["id"] for r in fetchall(conn,"SELECT id FROM vote")} if update_only else set()
     rows = fetch_table("SaliDBAanestys")
+    if rows:
+        print(f"  DEBUG first row keys: {list(rows[0].keys())[:10]}")
+        print(f"  DEBUG IstuntoPvm sample: {rows[0].get('IstuntoPvm')}")
+        print(f"  DEBUG AanestysOtsikko sample: {rows[0].get('AanestysOtsikko')}")
     data = []
     for r in rows:
-        vid = str(r.get("AanestysId") or r.get("Id",""))
-        if vid in existing: continue
-        data.append((vid, str(r.get("IstuntoId","")), r.get("AanestysPvm",""),
-                     r.get("Otsikko",""), r.get("Kuvaus",""),
-                     topic(r.get("Otsikko","")), r.get("Tulos",""),
-                     _int(r.get("JaaLkm",0)), _int(r.get("EiLkm",0))))
+        vid = str(r.get("AanestysId",""))
+        if not vid or vid in existing: continue
+        title = r.get("AanestysOtsikko","") or r.get("PaaKohtaOtsikko","") or ""
+        data.append((
+            vid,
+            str(r.get("IstuntoNumero","")),
+            (r.get("IstuntoPvm","") or "")[:10],
+            title,
+            r.get("AanestysLisaOtsikko","") or "",
+            topic(title),
+            "",
+            _int(r.get("AanestysTulosJaa",0)),
+            _int(r.get("AanestysTulosEi",0)),
+        ))
     executemany(conn, "INSERT INTO vote (id,session_id,date,title,description,topic,result,yeas,nays) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO NOTHING", data)
     execute(conn, "INSERT INTO sync_log VALUES (?,?,?)", ("vote", datetime.utcnow().isoformat(), len(data)))
-    conn.commit(); print(f"  ✓ {len(data)} votes saved")
+    conn.commit()
+    print(f"  ✓ {len(data)} votes saved")
 
 
 def sync_mp_votes(conn, update_only=False):
