@@ -83,7 +83,6 @@ export const PARTY_META = {
   'vas':   { bg:'#FDECEA', text:'#7A1D1D', short:'VAS',  label:'Vasemmistoliitto' },
   'r':     { bg:'#E6F1FB', text:'#185FA5', short:'RKP',  label:'RKP'              },
   'kd':    { bg:'#EEEDFE', text:'#3C3489', short:'KD',   label:'KD'               },
-  'saf':   { bg:'#F5F5F5', text:'#333333', short:'SAF',  label:'Suomen Asepalve.' },
   'liik':  { bg:'#FEF3E2', text:'#633806', short:'LIIK', label:'Liike Nyt'        },
   'tv':    { bg:'#F5F5F5', text:'#333333', short:'TV',   label:'Tosi Perussuom.'  },
 }
