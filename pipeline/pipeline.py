@@ -203,8 +203,9 @@ def choice(raw):
     if r in ("poissa","absent"):               return "poissa"
     return ""
 def sync_mps(conn):
-    print("\n[1/4] MPs (from SaliDBAanestysEdustaja)...")
-    rows = fetch_table("SaliDBAanestysEdustaja", max_pages=3)
+    print("\n[1/4] MPs (from recent vote)...")
+    # Use a recent vote ID to get only current term MPs
+    rows = fetch_table("SaliDBAanestysEdustaja", filters={"AanestysId": "56296"})
     seen = {}
     for r in rows:
         mid = str(r.get("EdustajaHenkiloNumero",""))
@@ -255,7 +256,7 @@ def sync_votes(conn, update_only=False):
     executemany(conn, "INSERT INTO vote (id,session_id,date,title,description,topic,result,yeas,nays) VALUES (?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO NOTHING", data)
     execute(conn, "INSERT INTO sync_log VALUES (?,?,?)", ("vote", datetime.utcnow().isoformat(), len(data)))
     conn.commit()
-    print(f"  ✓ {len(data)} votes saved")
+    print(f"  ✓ {len(data)} votes saved")sync_mps
 
 
 def sync_mp_votes(conn, update_only=False):
