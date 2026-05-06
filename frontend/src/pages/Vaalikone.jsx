@@ -259,7 +259,7 @@ function ResultsScreen({ results, answers, questions, onReset }) {
 }
 
 export default function Vaalikone() {
-  const { data: questions, loading } = useVaalikoneQuestions()
+  const questions = []
   const [screen, setScreen] = useState('intro')  // intro | quiz | loading | results
   const [answers, setAnswers]  = useState({})
   const [results, setResults]  = useState([])
