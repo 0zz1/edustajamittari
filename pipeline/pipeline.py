@@ -205,23 +205,22 @@ def choice(raw):
 
 def sync_mps(conn):
     print("\n[1/4] MPs (from recent votes)...")
+    PARTY_MAP = {
+        'saml': 'kok',
+        'cent': 'kesk',
+        'vänst': 'vas',
+        'sv': 'r',
+    }
     seen = {}
-    # Use several recent vote IDs to capture all current term MPs
     for vote_id in ["56296", "56276", "56211", "56201", "56150"]:
         rows = fetch_table("SaliDBAanestysEdustaja", filters={"AanestysId": vote_id})
-        PARTY_MAP = {
-    'saml': 'kok',
-    'cent': 'kesk',
-    'vänst': 'vas',
-    'sv': 'r',
-}
-for r in rows:
-    mid = str(r.get("EdustajaHenkiloNumero",""))
-    if mid and mid not in seen:
-        name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
-        party = r.get("EdustajaRyhmaLyhenne","").strip()
-        party = PARTY_MAP.get(party, party)
-        seen[mid] = (mid, name, party, "", "")
+        for r in rows:
+            mid = str(r.get("EdustajaHenkiloNumero",""))
+            if mid and mid not in seen:
+                name = f"{r.get('EdustajaEtunimi','')} {r.get('EdustajaSukunimi','')}".strip()
+                party = r.get("EdustajaRyhmaLyhenne","").strip()
+                party = PARTY_MAP.get(party, party)
+                seen[mid] = (mid, name, party, "", "")
     data = list(seen.values())
     sql = "INSERT INTO mp (id,name,party,constituency,photo_url) VALUES (?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET name=EXCLUDED.name,party=EXCLUDED.party"
     executemany(conn, sql, data)
