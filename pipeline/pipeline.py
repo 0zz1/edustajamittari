@@ -233,10 +233,6 @@ def sync_votes(conn, update_only=False):
     print("\n[3/4] Votes (SaliDBAanestys)...")
     existing = {r["id"] for r in fetchall(conn,"SELECT id FROM vote")} if update_only else set()
     rows = fetch_table("SaliDBAanestys")
-    if rows:
-        print(f"  DEBUG first row keys: {list(rows[0].keys())[:10]}")
-        print(f"  DEBUG IstuntoPvm sample: {rows[0].get('IstuntoPvm')}")
-        print(f"  DEBUG AanestysOtsikko sample: {rows[0].get('AanestysOtsikko')}")
     data = []
     for r in rows:
         vid = str(r.get("AanestysId",""))
