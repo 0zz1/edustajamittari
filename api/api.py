@@ -187,7 +187,12 @@ def parties():
 @app.get("/api/stats")
 def stats():
     with get_db() as conn:
-        return jsonify({t:fetchone(conn,f"SELECT COUNT(*) AS n FROM {t}")["n"] for t in ["mp","session","vote","mp_vote"]})
+        return jsonify({
+            "mp": fetchone(conn, "SELECT COUNT(*) AS n FROM mp")["n"],
+            "session": fetchone(conn, "SELECT COUNT(*) AS n FROM session")["n"],
+            "vote": fetchone(conn, "SELECT COUNT(*) AS n FROM vote WHERE date >= '2023-07-01'")["n"],
+            "mp_vote": fetchone(conn, "SELECT COUNT(*) AS n FROM mp_vote")["n"],
+        })
 
 
 @app.get("/health")
