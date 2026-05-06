@@ -6,7 +6,8 @@ import {
 const USE_MOCK = false   // flip to false when backend is running
 
 async function apiFetch(path) {
-  const res = await fetch(`/api${path}`)
+  const base = typeof __API_URL__ !== 'undefined' && __API_URL__ ? __API_URL__ : ''
+const res = await fetch(`${base}/api${path}`)
   if (!res.ok) throw new Error(`API ${res.status}: ${path}`)
   return res.json()
 }
