@@ -4,8 +4,6 @@ import { useLeaderboard } from '../hooks/useApi.js'
 import { PartyPill, MPAvatar, AttendanceBar, StatCard, Loading } from '../components/UI.jsx'
 import { PARTY_META } from '../mockData.js'
 
-const PARTIES = Object.keys(PARTY_META)
-
 const SORT_OPTIONS = [
   { value: 'attendance',    label: 'Läsnäolo' },
   { value: 'participation', label: 'Äänestänyt' },
@@ -71,13 +69,15 @@ export default function Leaderboard() {
             ))}
           </div>
 
-          <select value={party} onChange={e => setParty(e.target.value)} style={{
-            padding:'6px 10px', fontSize:'0.8125rem', borderRadius:'var(--radius-md)',
-            border:'1px solid var(--border-md)', background:'var(--bg-card)', color:'var(--ink)',
-          }}>
-            <option value="">Kaikki puolueet</option>
-            {PARTIES.map(p => <option key={p} value={p}>{p}</option>)}
-          </select>
+         <select value={party} onChange={e => setParty(e.target.value)} style={{
+  padding:'6px 10px', fontSize:'0.8125rem', borderRadius:'var(--radius-md)',
+  border:'1px solid var(--border-md)', background:'var(--bg-card)', color:'var(--ink)',
+}}>
+  <option value="">Kaikki puolueet</option>
+  {Object.entries(PARTY_META).map(([key, meta]) => (
+    <option key={key} value={key}>{meta.label || key}</option>
+  ))}
+</select>
 
           <button onClick={() => setOrder(o => o === 'desc' ? 'asc' : 'desc')} style={{
             padding:'6px 12px', fontSize:'0.8125rem', borderRadius:'var(--radius-md)',

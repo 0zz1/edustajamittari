@@ -75,12 +75,19 @@ export const MOCK_QUESTIONS = [
 ]
 
 export const PARTY_META = {
-  'Kokoomus':         { bg:'#E6F1FB', text:'#0C447C', short:'KOK' },
-  'SDP':              { bg:'#FCEBEB', text:'#791F1F', short:'SDP' },
-  'Perussuomalaiset': { bg:'#FEF3E2', text:'#633806', short:'PS'  },
-  'Keskusta':         { bg:'#EAF3DE', text:'#27500A', short:'KESK'},
-  'Vihreät':          { bg:'#E1F5EE', text:'#085041', short:'VIHR'},
-  'Vasemmistoliitto': { bg:'#FDECEA', text:'#7A1D1D', short:'VAS' },
-  'RKP':              { bg:'#E6F1FB', text:'#185FA5', short:'RKP' },
-  'KD':               { bg:'#EEEDFE', text:'#3C3489', short:'KD'  },
+  'kok':   { bg:'#E6F1FB', text:'#0C447C', short:'KOK',  label:'Kokoomus'         },
+  'sd':    { bg:'#FCEBEB', text:'#791F1F', short:'SDP',  label:'SDP'              },
+  'ps':    { bg:'#FEF3E2', text:'#633806', short:'PS',   label:'Perussuomalaiset' },
+  'kesk':  { bg:'#EAF3DE', text:'#27500A', short:'KESK', label:'Keskusta'         },
+  'vihr':  { bg:'#E1F5Eee', text:'#085041', short:'VIHR', label:'Vihreät'         },
+  'vas':   { bg:'#FDECEA', text:'#7A1D1D', short:'VAS',  label:'Vasemmistoliitto' },
+  'r':     { bg:'#E6F1FB', text:'#185FA5', short:'RKP',  label:'RKP'              },
+  'kd':    { bg:'#EEEDFE', text:'#3C3489', short:'KD',   label:'KD'               },
+  'saf':   { bg:'#F5F5F5', text:'#333333', short:'SAF',  label:'Suomen Asepalve.' },
+  'saml':  { bg:'#E6F1FB', text:'#0C447C', short:'SAML', label:'Samlingspartiet'  },
+  'cent':  { bg:'#EAF3DE', text:'#27500A', short:'CENT', label:'Centern'          },
+  'liik':  { bg:'#FEF3E2', text:'#633806', short:'LIIK', label:'Liike Nyt'        },
+  'sv':    { bg:'#E6F1FB', text:'#185FA5', short:'SV',   label:'Svenska folkp.'   },
+  'tv':    { bg:'#F5F5F5', text:'#333333', short:'TV',   label:'Tosi Perussuom.'  },
+  'vänst': { bg:'#FDECEA', text:'#7A1D1D', short:'VÄN',  label:'Vänsterförbundet' },
 }
