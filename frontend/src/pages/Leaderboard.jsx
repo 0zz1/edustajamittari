@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { useLeaderboard } from '../hooks/useApi.js'
 import { PartyPill, MPAvatar, AttendanceBar, StatCard, Loading } from '../components/UI.jsx'
@@ -24,6 +24,15 @@ export default function Leaderboard() {
 
   const { data, loading } = useLeaderboard({ sort, party, order })
 
+  const [stats, setStats] = useState(null)
+
+useEffect(() => {
+  fetch(`${typeof __API_URL__ !== 'undefined' && __API_URL__ ? __API_URL__ : ''}/api/stats`)
+    .then(r => r.json())
+    .then(setStats)
+    .catch(() => {})
+}, [])
+
   const sortVal = (mp) => {
     if (sort === 'abstain')       return mp.abstain_pct
     if (sort === 'participation') return mp.participation_pct
@@ -48,10 +57,10 @@ export default function Leaderboard() {
 
         {/* Summary stats */}
         <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(150px, 1fr))', gap:8, marginBottom:'2rem' }}>
-          <StatCard label="Keskim. läsnäolo"     value="84.2%" />
-          <StatCard label="Täysistuntoja"         value="319" />
-          <StatCard label="Äänestyksiä yhteensä"  value="9 847" />
-          <StatCard label="Edustajaa seurannassa" value="200" />
+          <StatCard label="Keskim. läsnäolo"     value={data.length ? (data.reduce((s, m) => s + parseFloat(m.attendance_pct || 0), 0) / data.length).toFixed(1) + '%' : '—'} />
+          <StatCard label="Täysistuntoja"         value={data.length ? Math.max(...data.map(m => m.total_sessions || 0)) : '—'} />
+          <StatCard label="Äänestyksiä yhteensä"  value={stats ? stats.vote.toLocaleString('fi-FI') : '—'} />
+          <StatCard label="Edustajaa seurannassa" value={data.length || '—'} />
         </div>
 
         {/* Controls */}
