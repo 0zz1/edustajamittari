@@ -199,3 +199,11 @@ def index(): return jsonify({"service":"Edustajamittari API","version":"1.0"})
 
 if __name__=="__main__":
     app.run(debug=True, port=5000)
+
+    @app.get("/api/debug/votes")
+def debug_votes():
+    with get_db() as conn:
+        sample = fetchall(conn, "SELECT id, date, title FROM vote LIMIT 5")
+        nulls = fetchone(conn, "SELECT COUNT(*) as n FROM vote WHERE date IS NULL")
+        dated = fetchone(conn, "SELECT COUNT(*) as n FROM vote WHERE date IS NOT NULL")
+    return jsonify({"sample": sample, "null_dates": nulls["n"], "with_dates": dated["n"]})
