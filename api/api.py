@@ -59,15 +59,32 @@ def leaderboard():
     party = request.args.get("party", "")
     limit = min(int(request.args.get("limit", 200)), 200)
     order = "ASC" if request.args.get("order") == "asc" else "DESC"
-    sort_col = {"attendance":"a.attendance_pct","participation":"v.participation_pct","abstain":"v.abstain_pct"}.get(sort, "a.attendance_pct")
+    sort_col = {"attendance":"a.attendance_pct","participation":"v.participation_pct","abstain":"v.abstain_pct"}.get(sort, "v.participation_pct")
     where, params = "WHERE 1=1", []
     if party:
         where += " AND m.party = ?"; params.append(party)
-    sql = f"""SELECT m.id,m.name,m.party,m.constituency,m.photo_url,
-        a.attendance_pct,a.present_count,a.absent_count,a.total_sessions,
-        v.participation_pct,v.abstain_pct,v.voted_jaa,v.voted_ei,v.voted_tyhja,v.voted_poissa,v.total_votes
-        FROM mp m LEFT JOIN v_mp_attendance a ON a.mp_id=m.id LEFT JOIN v_mp_voting v ON v.mp_id=m.id
-        {where} ORDER BY {sort_col} {order} NULLS LAST LIMIT ?"""
+    sql = f"""SELECT m.id, m.name, m.party, m.constituency, m.photo_url,
+        a.attendance_pct, a.present_count, a.absent_count, a.total_sessions,
+        v.participation_pct, v.abstain_pct, v.voted_jaa, v.voted_ei, v.voted_tyhja, v.voted_poissa, v.total_votes
+        FROM mp m
+        LEFT JOIN v_mp_attendance a ON a.mp_id = m.id
+        LEFT JOIN (
+            SELECT mp_id,
+                ROUND(100.0 * SUM(CASE WHEN choice IN ('jaa','ei','tyhja') THEN 1 ELSE 0 END) / COUNT(*), 1) AS participation_pct,
+                ROUND(100.0 * SUM(CASE WHEN choice = 'tyhja' THEN 1 ELSE 0 END) / NULLIF(COUNT(*),0), 1) AS abstain_pct,
+                SUM(CASE WHEN choice='jaa' THEN 1 ELSE 0 END) AS voted_jaa,
+                SUM(CASE WHEN choice='ei' THEN 1 ELSE 0 END) AS voted_ei,
+                SUM(CASE WHEN choice='tyhja' THEN 1 ELSE 0 END) AS voted_tyhja,
+                SUM(CASE WHEN choice='poissa' THEN 1 ELSE 0 END) AS voted_poissa,
+                COUNT(*) AS total_votes
+            FROM mp_vote mv
+            JOIN vote vt ON vt.id = mv.vote_id
+            WHERE vt.date >= '2023-06-01'
+            GROUP BY mp_id
+        ) v ON v.mp_id = m.id
+        {where}
+        AND v.total_votes IS NOT NULL
+        ORDER BY {sort_col} {order} NULLS LAST LIMIT ?"""
     params.append(limit)
     with get_db() as conn:
         data = fetchall(conn, sql, params)
