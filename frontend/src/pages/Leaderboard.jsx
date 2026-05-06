@@ -145,21 +145,21 @@ export default function Leaderboard() {
                     <AttendanceBar pct={mp.attendance_pct} height={4} />
                     <span style={{
                       fontSize:'0.875rem', fontWeight:500, minWidth:38, textAlign:'right',
-                 color: mp.attendance_pct == null ? 'var(--ink-3)' : mp.attendance_pct >= 90 ? 'var(--accent)' : mp.attendance_pct >= 75 ? 'var(--warn)' : 'var(--danger)',
+                 color: mp.attendance_pct == null ? 'var(--ink-3)' : parseFloat(mp.attendance_pct) >= 90 ? 'var(--accent)' : parseFloat(mp.attendance_pct) >= 75 ? 'var(--warn)' : 'var(--danger)',
                   }}>
-                    {mp.attendance_pct?.toFixed(1) ?? '—'}%
+                    {mp.attendance_pct != null ? parseFloat(mp.attendance_pct).toFixed(1) : '—'}%
                     </span>
                   </div>
                 </div>
 
                 {/* Participation */}
                 <div style={{ textAlign:'right', fontSize:'0.875rem', color:'var(--ink-2)' }}>
-                  {mp.participation_pct?.toFixed(1)}%
+                  {mp.participation_pct != null ? parseFloat(mp.participation_pct).toFixed(1) : '—'}%
                 </div>
 
                 {/* Abstain */}
                 <div style={{ textAlign:'right', fontSize:'0.875rem', color: mp.abstain_pct > 8 ? 'var(--danger)' : 'var(--ink-2)' }}>
-                  {mp.abstain_pct?.toFixed(1)}%
+                  {mp.abstain_pct != null ? parseFloat(mp.abstain_pct).toFixed(1) : '—'}%
                 </div>
               </Link>
             ))}
