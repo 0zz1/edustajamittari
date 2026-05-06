@@ -136,7 +136,7 @@ useEffect(() => {
 
                 {/* Name + party */}
                 <div style={{ display:'flex', alignItems:'center', gap:10, minWidth:0 }}>
-                  <MPAvatar name={mp.name} party={mp.party} size={32} />
+                  <MPAvatar name={mp.name} party={mp.party} size={32} id={mp.id} />
                   <div style={{ minWidth:0 }}>
                     <div style={{ fontWeight:500, fontSize:'0.875rem', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>
                       {mp.name}

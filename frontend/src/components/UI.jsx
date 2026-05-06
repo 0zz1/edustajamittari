@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { PARTY_META } from '../mockData.js'
 
@@ -52,9 +53,11 @@ export function PartyPill({ party, short = false }) {
 
 // ── MP Avatar ────────────────────────────────────────────────────────────────
 
-export function MPAvatar({ name, party, size = 36 }) {
+export function MPAvatar({ name, party, size = 36, id }) {
   const meta = PARTY_META[party] || { bg:'#EDEAE3', text:'#4A4845' }
   const initials = name.split(' ').map(p => p[0]).join('').slice(0, 2)
+  const [imgError, setImgError] = useState(false)
+
   return (
     <div style={{
       width: size, height: size, borderRadius: '50%',
@@ -62,8 +65,18 @@ export function MPAvatar({ name, party, size = 36 }) {
       display:'flex', alignItems:'center', justifyContent:'center',
       fontFamily: 'var(--font-head)', fontSize: size * 0.35,
       fontWeight: 700, flexShrink: 0,
+      overflow: 'hidden',
     }}>
-      {initials}
+      {id && !imgError ? (
+        <img
+          src={`https://www.eduskunta.fi/api/memberImages/${id}`}
+          alt={name}
+          onError={() => setImgError(true)}
+          style={{ width:'100%', height:'100%', objectFit:'cover' }}
+        />
+      ) : (
+        initials
+      )}
     </div>
   )
 }
